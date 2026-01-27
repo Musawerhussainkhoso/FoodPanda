@@ -133,22 +133,20 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverAppBar(
             pinned: true,
             floating: true,
-            expandedHeight: 120.0,
+            expandedHeight: isDesktop ? 120.0 : 130.0,
             backgroundColor: AppTheme.primaryColor,
             elevation: 0,
             title: Row(
               children: [
                 if (!isDesktop) ...[
-                  // Icon(Icons.location_on, size: 16),
-                  // SizedBox(width: 4),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Delivering to', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300)),
+                      Text('Delivering to', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300, color: Colors.white70)),
                       Row(
                         children: [
-                          Text('Home • 123 Street', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                          Icon(Icons.keyboard_arrow_down, size: 16),
+                          Text('Home • 123 Street', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white)),
+                          Icon(Icons.keyboard_arrow_down, size: 16, color: Colors.white),
                         ],
                       ),
                     ],
@@ -166,13 +164,13 @@ class _HomeScreenState extends State<HomeScreen> {
             actions: [
               Consumer<CartProvider>(
                 builder: (_, cart, ch) => Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
+                  padding: const EdgeInsets.only(right: 8.0),
                   child: Center(
                     child: Badge(
                       label: Text(cart.itemCount.toString()),
                       isLabelVisible: cart.itemCount > 0,
                       child: IconButton(
-                        icon: Icon(Icons.shopping_bag_outlined, color: Colors.white),
+                        icon: Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 22),
                         onPressed: () {
                           Navigator.pushNamed(context, '/cart');
                         },
@@ -186,46 +184,74 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(right: 20),
                   child: Center(child: ElevatedButton(onPressed: (){}, child: Text("Login"), style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: AppTheme.primaryColor))),
                 )
+              else
+                 Padding(
+                   padding: const EdgeInsets.only(right: 8.0),
+                   child: IconButton(icon: Icon(Icons.person_outline, color: Colors.white), onPressed: () {}),
+                 )
             ],
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(60),
+              preferredSize: Size.fromHeight(65),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search for shops & restaurants',
-                      hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
-                      prefixIcon: Icon(Icons.search, color: AppTheme.primaryColor, size: 20),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 13),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          style: TextStyle(fontSize: 14),
+                          decoration: InputDecoration(
+                            hintText: 'Search for shops & restaurants',
+                            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+                            prefixIcon: Icon(Icons.search, color: AppTheme.primaryColor, size: 18),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 10),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 10),
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.tune, color: AppTheme.primaryColor, size: 18),
+                        onPressed: () {
+                          // Filter logic
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
 
-          // PULL TO REFRESH (Simulated with Sliver)
-          
+          // HERO SECTION
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // HERO BANNER CAROUSEL
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 CarouselSlider(
                   options: CarouselOptions(
-                    height: 180.0,
+                    height: 160.0,
                     autoPlay: true,
                     enlargeCenterPage: true,
-                    viewportFraction: isDesktop ? 0.5 : 0.92,
+                    viewportFraction: isDesktop ? 0.4 : 0.88,
                     aspectRatio: 16/9,
                     initialPage: 0,
                   ),
@@ -241,8 +267,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.symmetric(horizontal: 5.0),
                           decoration: BoxDecoration(
-                            color: Colors.pink[50], // Fallback color
-                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.pink[50], 
+                            borderRadius: BorderRadius.circular(16),
                             image: DecorationImage(
                               image: AssetImage(i),
                               fit: BoxFit.cover,
@@ -251,18 +277,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(16),
                               gradient: LinearGradient(
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter,
-                                colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                                colors: [Colors.black.withOpacity(0.7), Colors.transparent],
                               ),
                             ),
-                            padding: EdgeInsets.all(20),
+                            padding: EdgeInsets.all(15),
                             alignment: Alignment.bottomLeft,
-                            child: Text(
-                              '50% OFF\nSpecial Deal Today!',
-                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'FLASH DEAL',
+                                  style: TextStyle(color: AppTheme.primaryColor, fontSize: 10, fontWeight: FontWeight.w900, backgroundColor: Colors.white, letterSpacing: 1),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  '50% OFF TODAY!',
+                                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -271,16 +308,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   }).toList(),
                 ),
 
-                SizedBox(height: 25),
+                SizedBox(height: 20),
 
                 // CUISINES
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text('Cuisines', style: AppTheme.headline1.copyWith(fontSize: 20)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Cuisines', style: AppTheme.headline1.copyWith(fontSize: 18)),
+                      TextButton(onPressed: () {}, child: Text('View all', style: TextStyle(color: AppTheme.primaryColor, fontSize: 13, fontWeight: FontWeight.bold))),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 5),
                 Container(
-                  height: 110,
+                  height: 100,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -289,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       _buildCuisineItem('Pizza', 'assets/images/dominos.png'),
                       _buildCuisineItem('Healthy', 'assets/images/subway.png'),
                       _buildCuisineItem('Fast Food', 'assets/images/mcdonalds.png'),
-                      _buildCuisineItem('Fried Chicken', 'assets/images/kfc.png'),
+                      _buildCuisineItem('Chicken', 'assets/images/kfc.png'),
                     ],
                   ),
                 ),
@@ -297,7 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text('All Restaurants', style: AppTheme.headline1.copyWith(fontSize: 22)),
+                  child: Text('All Restaurants', style: AppTheme.headline1.copyWith(fontSize: 20)),
                 ),
                 SizedBox(height: 10),
               ],
@@ -313,13 +356,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
               : SliverPadding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 80), // Bottom padding for nav bar
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 100), 
                   sliver: SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: isDesktop ? 3 : (MediaQuery.of(context).size.width > 600 ? 2 : 1),
-                      childAspectRatio: 0.82, // Taller cards
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
+                      childAspectRatio: isDesktop ? 0.85 : 0.88, 
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {

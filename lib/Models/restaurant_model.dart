@@ -1,3 +1,5 @@
+import 'menu_item_model.dart';
+
 class Restaurant {
   final String id;
   final String name;
@@ -6,6 +8,7 @@ class Restaurant {
   final double rating;
   final String deliveryTime;
   final String priceRange;
+  final List<MenuItem> menuItems;
 
   Restaurant({
     required this.id,
@@ -15,5 +18,6 @@ class Restaurant {
     required this.rating,
     required this.deliveryTime,
     required this.priceRange,
+    this.menuItems = const [],
   });
 }

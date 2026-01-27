@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foodpanda_app/Providers/cart_provider.dart';
 import 'package:foodpanda_app/Screens/Login_Screen.dart';
+import 'package:foodpanda_app/Screens/cart_screen.dart';
 import 'package:foodpanda_app/Screens/home_screen.dart';
-// Import home screen
+import 'package:foodpanda_app/utils/app_theme.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,18 +13,21 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Food Express',
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-        fontFamily: 'Poppins',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Food Express',
+        theme: AppTheme.lightTheme,
+        home: LoginScreen(), // Start with login
+        routes: {
+          '/login': (context) => LoginScreen(),
+          '/home': (context) => HomeScreen(),
+          '/cart': (context) => CartScreen(),
+        },
       ),
-      home: LoginScreen(), // Start with login
-      routes: {
-        '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(), // Add home route
-      },
     );
   }
 }

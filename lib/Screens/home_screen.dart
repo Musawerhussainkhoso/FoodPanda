@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/Models/restaurant_model.dart';
 import 'package:foodpanda_app/Providers/cart_provider.dart';
+import 'package:foodpanda_app/Screens/burger_category_screen.dart';
 import 'package:foodpanda_app/Screens/restaurant_detail_screen.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -409,16 +410,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCuisineItem(String name, String imagePath) {
-    return Container(
+Widget _buildCuisineItem(String name, String imagePath) {
+  return GestureDetector(
+    onTap: () {
+      if (name == 'Burgers') {
+        // Navigate to BurgerCategoryScreen
+        Navigator.pushNamed(context, BurgerCategoryScreen.routeName);
+      } else {
+        // Handle other categories
+      }
+    },
+    child: Container(
       width: 80,
       margin: EdgeInsets.only(right: 15),
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(2), // Border width
+            padding: EdgeInsets.all(2),
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withOpacity(0.1), // Border color
+              color: AppTheme.primaryColor.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: CircleAvatar(
@@ -426,15 +436,16 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: Colors.white,
               backgroundImage: AssetImage(imagePath),
               onBackgroundImageError: (_, __) {},
-              child: Icon(Icons.fastfood, color: Colors.grey[300]), // Fallback
+              child: Icon(Icons.fastfood, color: Colors.grey[300]),
             ),
           ),
           SizedBox(height: 8),
           Text(name, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12), overflow: TextOverflow.ellipsis),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildRestaurantCard(Restaurant restaurant) {
     return Container(

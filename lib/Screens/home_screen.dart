@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foodpanda_app/Models/restaurant_model.dart';
 import 'package:foodpanda_app/Providers/cart_provider.dart';
 import 'package:foodpanda_app/Screens/burger_category_screen.dart';
+import 'package:foodpanda_app/Screens/fastfoodcategory.dart'; // YEH IMPORT ADD KARO!
 import 'package:foodpanda_app/Screens/restaurant_detail_screen.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -413,11 +414,20 @@ class _HomeScreenState extends State<HomeScreen> {
 Widget _buildCuisineItem(String name, String imagePath) {
   return GestureDetector(
     onTap: () {
+      print('Tapped on: $name');
+      
       if (name == 'Burgers') {
-        // Navigate to BurgerCategoryScreen
         Navigator.pushNamed(context, BurgerCategoryScreen.routeName);
+      } else if (name == 'Fast Food') {
+        Navigator.pushNamed(context, FastFoodCategoryScreen.routeName);
       } else {
-        // Handle other categories
+        // Show coming soon message for other categories
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$name category coming soon!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
       }
     },
     child: Container(

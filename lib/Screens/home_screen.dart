@@ -68,6 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
+  final ScrollController _scrollController = ScrollController();
+  String _selectedAddress = 'Home • 123 Street';
 
   @override
   void initState() {
@@ -96,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -149,6 +152,57 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showAddressSelector() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        final addresses = [
+          'Home • 123 Street',
+          'Office • Downtown',
+          'Hostel • Block A',
+        ];
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Select delivery address',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ...addresses.map(
+                (address) => ListTile(
+                  leading: Icon(
+                    address.startsWith('Home')
+                        ? Icons.home
+                        : Icons.location_on_outlined,
+                    color: AppTheme.primaryColor,
+                  ),
+                  title: Text(address),
+                  onTap: () {
+                    setState(() {
+                      _selectedAddress = address;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 800;
@@ -157,53 +211,64 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       drawer: isDesktop ? null : _buildDrawer(),
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           // STICKY APP BAR
           SliverAppBar(
             pinned: true,
-            floating: true,
-            expandedHeight: isDesktop ? 120.0 : 130.0,
+            floating: false,
+            expandedHeight: isDesktop ? 120.0 : 115.0,
             backgroundColor: AppTheme.primaryColor,
             elevation: 0,
+            centerTitle: false,
+            titleSpacing: isDesktop ? 24 : -4,
             title: Row(
               children: [
                 if (!isDesktop) ...[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Delivering to',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white70,
+                  InkWell(
+                    onTap: _showAddressSelector,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Delivering to',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white70,
+                          ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Home • 123 Street',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
+                        Row(
+                          children: [
+                            Text(
+                              _selectedAddress,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 16,
                               color: Colors.white,
                             ),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ] else ...[
                   Text(
-                    'FoodPanda',
-                    style: AppTheme.headline1.copyWith(color: Colors.white),
+                    'foodpanda',
+                    style: AppTheme.headline1.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.5,
+                    ),
                   ),
-                  Spacer(),
+                  SizedBox(width: 32),
                   _buildDesktopNavItem('Home'),
                   _buildDesktopNavItem('Delivery'),
                   _buildDesktopNavItem('Pick-Up'),
@@ -238,7 +303,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(right: 20),
                   child: Center(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
                       child: Text("Login"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -257,64 +324,74 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
             ],
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(65),
+              preferredSize: Size.fromHeight(60),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black12, blurRadius: 4),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Search for shops & restaurants',
-                            hintStyle: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 13,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: isDesktop ? 680 : double.infinity,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(color: Colors.black12, blurRadius: 4),
+                              ],
                             ),
-                            prefixIcon: Icon(
-                              Icons.search,
+                            child: TextField(
+                              controller: _searchController,
+                              style: TextStyle(fontSize: 13),
+                              decoration: InputDecoration(
+                                hintText: 'Search for shops & restaurants',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 12,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: AppTheme.primaryColor,
+                                  size: 18,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 8),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black12, blurRadius: 4),
+                            ],
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(
+                              Icons.tune,
                               color: AppTheme.primaryColor,
                               size: 18,
                             ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(vertical: 10),
+                            onPressed: () {
+                              // Filter logic
+                            },
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(width: 10),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 4),
-                        ],
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.tune,
-                          color: AppTheme.primaryColor,
-                          size: 18,
-                        ),
-                        onPressed: () {
-                          // Filter logic
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -473,22 +550,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
               : SliverPadding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
+                  padding: EdgeInsets.fromLTRB(20, 8, 20, 32),
                   sliver: SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: isDesktop
                           ? 3
                           : (MediaQuery.of(context).size.width > 600 ? 2 : 1),
-                      childAspectRatio: isDesktop ? 0.85 : 0.88,
+                      childAspectRatio: isDesktop ? 1.3 : 1.15,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
-                    delegate: SliverChildBuilderDelegate((
-                      BuildContext context,
-                      int index,
-                    ) {
-                      return _buildRestaurantCard(_filteredRestaurants[index]);
-                    }, childCount: _filteredRestaurants.length),
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return _buildRestaurantCard(
+                          _filteredRestaurants[index],
+                        );
+                      },
+                      childCount: _filteredRestaurants.length,
+                    ),
                   ),
                 ),
         ],
@@ -505,11 +584,18 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: (index) {
                 setState(() {
                   _currentIndex = index;
-                  if (index == 2) {
-                    // Assuming Cart is index 2 or whatever
-                    // Handle nav
-                  }
                 });
+                if (index == 1) {
+                  _scrollController.animateTo(
+                    0,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeOut,
+                  );
+                } else if (index == 2) {
+                  Navigator.pushNamed(context, '/orders');
+                } else if (index == 3) {
+                  Navigator.pushNamed(context, '/profile');
+                }
               },
               items: [
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -642,7 +728,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Image.asset(
                       restaurant.imagePath,
                       width: double.infinity,
-                      height: 150,
+                      height: 130,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -743,91 +829,89 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               // Content Section
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  restaurant.name,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                    letterSpacing: -0.3,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                restaurant.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: Colors.black87,
+                                  letterSpacing: -0.3,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (restaurant.rating > 4.2)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Icon(
+                                  Icons.verified,
+                                  size: 16,
+                                  color: Colors.blue[400],
                                 ),
                               ),
-                              if (restaurant.rating > 4.2)
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: Icon(
-                                    Icons.verified,
-                                    size: 16,
-                                    color: Colors.blue[400],
-                                  ),
-                                ),
-                            ],
+                          ],
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          '${restaurant.category} • ${restaurant.priceRange}',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
                           ),
-                          SizedBox(height: 4),
-                          Text(
-                            '${restaurant.category} • ${restaurant.priceRange}',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.amber[600],
+                          size: 18,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          restaurant.rating.toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
                           ),
-                        ],
-                      ),
-
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star_rounded,
-                            color: Colors.amber[600],
-                            size: 18,
+                        ),
+                        Text(
+                          ' (500+)',
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 13,
                           ),
-                          SizedBox(width: 4),
-                          Text(
-                            restaurant.rating.toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 13,
-                            ),
+                        ),
+                        Spacer(),
+                        Text(
+                          'Free Delivery',
+                          style: TextStyle(
+                            color: AppTheme.primaryColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
                           ),
-                          Text(
-                            ' (500+)',
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 13,
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            'Free Delivery',
-                            style: TextStyle(
-                              color: AppTheme.primaryColor,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],

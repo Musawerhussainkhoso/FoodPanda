@@ -7,6 +7,10 @@ import 'package:foodpanda_app/Screens/burger_category_screen.dart';
 import 'package:foodpanda_app/Screens/cart_screen.dart';
 import 'package:foodpanda_app/Screens/fastfoodcategory.dart';
 import 'package:foodpanda_app/Screens/home_screen.dart';
+import 'package:foodpanda_app/Screens/orders_screen.dart';
+import 'package:foodpanda_app/Screens/profile_screen.dart';
+import 'package:foodpanda_app/Screens/delivery_addresses_screen.dart';
+import 'package:foodpanda_app/Screens/payment_methods_screen.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +36,10 @@ class MyApp extends StatelessWidget {
           '/fastfood-category': (context) => FastFoodCategoryScreen(),
           '/pizza-category': (context) => PizzaCategoryScreen(),
           '/chicken-category': (context) => ChickenCategoryScreen(),
+          '/orders': (context) => const OrdersScreen(),
+          '/profile': (context) => const ProfileScreen(),
+          '/addresses': (context) => const DeliveryAddressesScreen(),
+          '/payments': (context) => const PaymentMethodsScreen(),
         },
       ),
     );

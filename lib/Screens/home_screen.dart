@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/Models/restaurant_model.dart';
 import 'package:foodpanda_app/Providers/cart_provider.dart';
+import 'package:foodpanda_app/Providers/profile_provider.dart';
 import 'package:foodpanda_app/Screens/ChickenCategoryScreen.dart';
 import 'package:foodpanda_app/Screens/PizzaCategoryScreen.dart';
 import 'package:foodpanda_app/Screens/burger_category_screen.dart';
@@ -108,17 +110,29 @@ class _HomeScreenState extends State<HomeScreen> {
       width: 280,
       child: Column(
         children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: AppTheme.primaryColor),
-            margin: EdgeInsets.zero,
-            accountName: Text(
-              'Guest User',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            accountEmail: Text('Sign in for more features'),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: AppTheme.primaryColor),
+          Consumer<ProfileProvider>(
+            builder: (_, profile, __) => InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/profile');
+              },
+              child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: AppTheme.primaryColor),
+                margin: EdgeInsets.zero,
+                accountName: Text(
+                  profile.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                accountEmail: Text(profile.email),
+                currentAccountPicture: profile.hasProfileImage
+                    ? CircleAvatar(
+                        backgroundImage: MemoryImage(base64Decode(profile.profileImageBase64!)),
+                      )
+                    : CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.person, color: AppTheme.primaryColor),
+                      ),
+              ),
             ),
           ),
           ListTile(
@@ -319,7 +333,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: IconButton(
                     icon: Icon(Icons.person_outline, color: Colors.white),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/profile');
+                    },
                   ),
                 ),
             ],

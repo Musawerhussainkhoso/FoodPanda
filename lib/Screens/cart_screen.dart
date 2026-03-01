@@ -44,17 +44,31 @@ class CartScreen extends StatelessWidget {
                           child: ListTile(
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                item.imagePath, // In a real app, this might be network or asset
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                                errorBuilder: (c,e,s) => Container(
-                                  width: 60, height: 60, 
-                                  color: Colors.grey[200], 
-                                  child: Icon(Icons.fastfood, color: Colors.grey)
-                                ),
-                              ),
+                              child: item.imagePath.startsWith('assets/')
+                                  ? Image.asset(
+                                      item.imagePath,
+                                      width: 60,
+                                      height: 60,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => Container(
+                                        width: 60,
+                                        height: 60,
+                                        color: Colors.grey[200],
+                                        child: Icon(Icons.fastfood, color: Colors.grey),
+                                      ),
+                                    )
+                                  : Image.network(
+                                      item.imagePath,
+                                      width: 60,
+                                      height: 60,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) => Container(
+                                        width: 60,
+                                        height: 60,
+                                        color: Colors.grey[200],
+                                        child: Icon(Icons.fastfood, color: Colors.grey),
+                                      ),
+                                    ),
                             ),
                             title: Text(item.name, style: TextStyle(fontWeight: FontWeight.bold)),
                             subtitle: Text('Total: \$${(item.price * item.quantity).toStringAsFixed(2)}'),
@@ -103,10 +117,7 @@ class CartScreen extends StatelessWidget {
                    width: double.infinity,
                    child: ElevatedButton(
                      onPressed: cart.totalAmount <= 0 ? null : () {
-                       // Mock Checkout
-                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order Placed Successfully!')));
-                       cart.clear();
-                       Navigator.pop(context);
+                       Navigator.pushNamed(context, '/checkout');
                      },
                      style: ElevatedButton.styleFrom(
                        padding: EdgeInsets.symmetric(vertical: 16),

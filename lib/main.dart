@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/Providers/cart_provider.dart';
+import 'package:foodpanda_app/Providers/profile_provider.dart';
 import 'package:foodpanda_app/Screens/ChickenCategoryScreen.dart';
 import 'package:foodpanda_app/Screens/Login_Screen.dart';
 import 'package:foodpanda_app/Screens/PizzaCategoryScreen.dart';
@@ -9,6 +10,7 @@ import 'package:foodpanda_app/Screens/fastfoodcategory.dart';
 import 'package:foodpanda_app/Screens/home_screen.dart';
 import 'package:foodpanda_app/Screens/orders_screen.dart';
 import 'package:foodpanda_app/Screens/profile_screen.dart';
+import 'package:foodpanda_app/Screens/checkout_screen.dart';
 import 'package:foodpanda_app/Screens/delivery_addresses_screen.dart';
 import 'package:foodpanda_app/Screens/payment_methods_screen.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
@@ -22,7 +24,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Food Express',
@@ -32,6 +37,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           '/home': (context) => HomeScreen(),
           '/cart': (context) => CartScreen(),
+          '/checkout': (context) => const CheckoutScreen(),
           '/burger-category': (context) => BurgerCategoryScreen(),
           '/fastfood-category': (context) => FastFoodCategoryScreen(),
           '/pizza-category': (context) => PizzaCategoryScreen(),

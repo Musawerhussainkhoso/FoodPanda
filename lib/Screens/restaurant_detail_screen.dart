@@ -17,16 +17,23 @@ class RestaurantDetailScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 250,
             pinned: true,
+            backgroundColor: AppTheme.primaryColor,
+            iconTheme: const IconThemeData(color: Colors.white),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () => Navigator.pop(context),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               title: Text(restaurant.name),
               background: Image.asset(
                 restaurant.imagePath,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey, child: Icon(Icons.restaurant, size: 50)),
+                errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey, child: Icon(Icons.restaurant, size: 50)),
               ),
             ),
             actions: [
-               Consumer<CartProvider>(
+              Consumer<CartProvider>(
                 builder: (_, cart, ch) => Badge(
                   label: Text(cart.itemCount.toString()),
                   isLabelVisible: cart.itemCount > 0,

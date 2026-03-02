@@ -3,6 +3,38 @@ import 'package:foodpanda_app/Providers/cart_provider.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
+Widget _buildBreadcrumb(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+    child: Row(
+      children: const [
+        Text(
+          'Home',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4),
+          child: Icon(
+            Icons.chevron_right,
+            size: 16,
+            color: Colors.white70,
+          ),
+        ),
+        Text(
+          'My Cart',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,10 +42,16 @@ class CartScreen extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Cart', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 1,
-        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
+        titleSpacing: 0,
+        title: _buildBreadcrumb(context),
       ),
       body: Column(
         children: [

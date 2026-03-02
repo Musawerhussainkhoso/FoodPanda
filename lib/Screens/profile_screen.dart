@@ -17,19 +17,20 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: AppTheme.primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        elevation: 0,
         title: const Text(
           'My Profile',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
         ),
-        centerTitle: true,
       ),
       body: Consumer<ProfileProvider>(
         builder: (context, profile, _) {

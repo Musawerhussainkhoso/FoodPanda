@@ -200,9 +200,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (cart.items.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Checkout', style: TextStyle(color: Colors.black)),
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.white),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Checkout',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         body: Center(
           child: Column(
@@ -224,10 +235,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkout', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Checkout',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),

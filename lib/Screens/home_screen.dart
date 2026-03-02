@@ -219,11 +219,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width > 800;
-
     return Scaffold(
       key: _scaffoldKey,
-      drawer: isDesktop ? null : _buildDrawer(),
+      drawer: _buildDrawer(),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -231,63 +229,47 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverAppBar(
             pinned: true,
             floating: false,
-            expandedHeight: isDesktop ? 120.0 : 115.0,
+            expandedHeight: 115.0,
             backgroundColor: AppTheme.primaryColor,
             elevation: 0,
             centerTitle: false,
-            titleSpacing: isDesktop ? 24 : -4,
+            titleSpacing: -4,
             title: Row(
               children: [
-                if (!isDesktop) ...[
-                  InkWell(
-                    onTap: _showAddressSelector,
-                    borderRadius: BorderRadius.circular(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Delivering to',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white70,
-                          ),
+                InkWell(
+                  onTap: _showAddressSelector,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Delivering to',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.white70,
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              _selectedAddress,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 16,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            _selectedAddress,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ] else ...[
-                  Text(
-                    'foodpanda',
-                    style: AppTheme.headline1.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  SizedBox(width: 32),
-                  _buildDesktopNavItem('Home'),
-                  _buildDesktopNavItem('Delivery'),
-                  _buildDesktopNavItem('Pick-Up'),
-                  _buildDesktopNavItem('Dine-In'),
-                ],
+                ),
               ],
             ),
             actions: [
@@ -312,32 +294,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              if (isDesktop)
-                Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/login');
-                      },
-                      child: Text("Login"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: AppTheme.primaryColor,
-                      ),
-                    ),
-                  ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: IconButton(
-                    icon: Icon(Icons.person_outline, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/profile');
-                    },
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: Icon(Icons.person_outline, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/profile');
+                  },
                 ),
+              ),
             ],
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(60),
@@ -347,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.centerLeft,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: isDesktop ? 680 : double.infinity,
+                      maxWidth: double.infinity,
                     ),
                     child: Row(
                       children: [
@@ -425,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 160.0,
                     autoPlay: true,
                     enlargeCenterPage: true,
-                    viewportFraction: isDesktop ? 0.4 : 0.88,
+                    viewportFraction: 0.88,
                     aspectRatio: 16 / 9,
                     initialPage: 0,
                   ),
@@ -569,10 +534,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.fromLTRB(20, 8, 20, 32),
                   sliver: SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isDesktop
-                          ? 3
-                          : (MediaQuery.of(context).size.width > 600 ? 2 : 1),
-                      childAspectRatio: isDesktop ? 1.3 : 1.15,
+                      crossAxisCount:
+                          MediaQuery.of(context).size.width > 600 ? 2 : 1,
+                      childAspectRatio: 1.15,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
@@ -589,46 +553,49 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      bottomNavigationBar: isDesktop
-          ? null
-          : BottomNavigationBar(
-              currentIndex: _currentIndex,
-              selectedItemColor: AppTheme.primaryColor,
-              unselectedItemColor: Colors.grey,
-              showUnselectedLabels: true,
-              type: BottomNavigationBarType.fixed,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-                if (index == 1) {
-                  _scrollController.animateTo(
-                    0,
-                    duration: Duration(milliseconds: 400),
-                    curve: Curves.easeOut,
-                  );
-                } else if (index == 2) {
-                  Navigator.pushNamed(context, '/orders');
-                } else if (index == 3) {
-                  Navigator.pushNamed(context, '/profile');
-                }
-              },
-              items: [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  label: 'Search',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.receipt_long),
-                  label: 'Orders',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline),
-                  label: 'Profile',
-                ),
-              ],
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        selectedItemColor: AppTheme.primaryColor,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 0) {
+            setState(() {
+              _currentIndex = 0;
+            });
+            _scrollController.animateTo(
+              0,
+              duration: Duration(milliseconds: 400),
+              curve: Curves.easeOut,
+            );
+          } else if (index == 1) {
+            setState(() {
+              _currentIndex = 0;
+            });
+            Navigator.pushNamed(context, '/orders');
+          } else if (index == 2) {
+            setState(() {
+              _currentIndex = 0;
+            });
+            Navigator.pushNamed(context, '/profile');
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 

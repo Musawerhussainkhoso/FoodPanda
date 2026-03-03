@@ -505,19 +505,28 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Restaurant Image
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: AssetImage(restaurant.imagePath),
-                    fit: BoxFit.cover,
-                    onError: (_, __) => Container(
-                      color: Colors.grey[100],
-                      child: Icon(Icons.local_pizza, color: Colors.grey[300]),
-                    ),
-                  ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  restaurant.imagePath,
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Fallback to a generic pizza image (Domino's)
+                    return Image.asset(
+                      'assets/images/dominos.png',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                      errorBuilder: (c, e, s) => Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.grey[100],
+                        child: Icon(Icons.local_pizza, color: Colors.grey[300]),
+                      ),
+                    );
+                  },
                 ),
               ),
 

@@ -7,6 +7,8 @@ import 'package:foodpanda_app/utils/app_theme.dart';
 class PizzaCategoryScreen extends StatefulWidget {
   static const String routeName = '/pizza-category';
 
+  const PizzaCategoryScreen({super.key});
+
   @override
   _PizzaCategoryScreenState createState() => _PizzaCategoryScreenState();
 }
@@ -239,7 +241,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
             ),
           ],
         ),
-        backgroundColor: Colors.orange[700],
+        backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(70),
@@ -268,7 +270,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
                         ),
                         prefixIcon: Icon(
                           Icons.search,
-                          color: Colors.orange[700],
+                          color: AppTheme.primaryColor,
                           size: 18,
                         ),
                         border: InputBorder.none,
@@ -291,7 +293,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
                   child: PopupMenuButton<String>(
                     icon: Icon(
                       Icons.filter_list,
-                      color: Colors.orange[700],
+                      color: AppTheme.primaryColor,
                       size: 18,
                     ),
                     onSelected: (value) {
@@ -358,7 +360,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
         // Stats Section
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          color: Colors.orange[50],
+          color: Colors.grey[50],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -377,7 +379,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.orange[700]!, Colors.deepOrange[400]!],
+                colors: [AppTheme.primaryColor, AppTheme.secondaryColor],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -460,7 +462,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
   Widget _buildStatItem(IconData icon, String value, String label) {
     return Column(
       children: [
-        Icon(icon, color: Colors.orange[700], size: 24),
+        Icon(icon, color: AppTheme.primaryColor, size: 24),
         SizedBox(height: 5),
         Text(
           value,
@@ -557,7 +559,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.orange[100],
+                            color: AppTheme.primaryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
@@ -635,16 +637,16 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.orange[50],
+                                color: AppTheme.primaryColor.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(4),
                                 border: Border.all(
-                                  color: Colors.orange[200]!,
+                                  color: AppTheme.primaryColor.withOpacity(0.2),
                                 ),
                               ),
                               child: Text(
                                 item.name,
                                 style: TextStyle(
-                                  color: Colors.orange[700],
+                                  color: AppTheme.primaryColor,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -672,7 +674,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
                         Text(
                           'Free delivery',
                           style: TextStyle(
-                            color: Colors.orange[700],
+                            color: AppTheme.primaryColor,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -684,7 +686,7 @@ class _PizzaCategoryScreenState extends State<PizzaCategoryScreen> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.orange[700],
+                            color: AppTheme.primaryColor,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(

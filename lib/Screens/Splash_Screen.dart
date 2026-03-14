@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/Screens/Login_Screen.dart';
+import 'package:foodpanda_app/utils/app_theme.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -18,10 +21,11 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown,
+      backgroundColor: AppTheme.primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

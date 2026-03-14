@@ -7,7 +7,7 @@ class Mytheme {
     brightness: Brightness.light,
     fontFamily: GoogleFonts.lato().fontFamily,
     appBarTheme: AppBarTheme(
-      color: Colors.white,
+      backgroundColor: Colors.white,
       elevation: 0.0,
       iconTheme: IconThemeData(color: Colors.black),
 
@@ -22,7 +22,7 @@ class Mytheme {
     brightness: Brightness.dark,
     fontFamily: GoogleFonts.lato().fontFamily,
     appBarTheme: AppBarTheme(
-      color: Colors.black,
+      backgroundColor: Colors.black,
       elevation: 0.0,
       iconTheme: IconThemeData(color: Colors.white),
 

@@ -204,7 +204,7 @@ class ProfileScreen extends StatelessWidget {
                             trailing: Switch(
                               value: true,
                               onChanged: (v) {},
-                              activeColor: AppTheme.primaryColor,
+                              activeThumbColor: AppTheme.primaryColor,
                             ),
                           ),
                         ],

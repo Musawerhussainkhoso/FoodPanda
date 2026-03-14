@@ -1,4 +1,3 @@
-import 'package:foodpanda_app/Models/menu_item_model.dart';
 
 class CartItem {
   final String id;

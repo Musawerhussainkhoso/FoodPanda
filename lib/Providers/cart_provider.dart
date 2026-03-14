@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foodpanda_app/Models/cart_model.dart';
-import 'package:foodpanda_app/Models/menu_item_model.dart';
 
 class CartProvider with ChangeNotifier {
   Map<String, CartItem> _items = {};

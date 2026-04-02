@@ -7,6 +7,8 @@ import 'package:foodpanda_app/utils/app_theme.dart';
 class ChickenCategoryScreen extends StatefulWidget {
   static const String routeName = '/chicken-category';
 
+  const ChickenCategoryScreen({super.key});
+
   @override
   _ChickenCategoryScreenState createState() => _ChickenCategoryScreenState();
 }
@@ -294,7 +296,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
             ),
           ],
         ),
-        backgroundColor: Colors.red[800],
+        backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(70),
@@ -323,7 +325,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
                         ),
                         prefixIcon: Icon(
                           Icons.search,
-                          color: Colors.red[800],
+                          color: AppTheme.primaryColor,
                           size: 18,
                         ),
                         border: InputBorder.none,
@@ -346,7 +348,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
                   child: PopupMenuButton<String>(
                     icon: Icon(
                       Icons.filter_list,
-                      color: Colors.red[800],
+                      color: AppTheme.primaryColor,
                       size: 18,
                     ),
                     onSelected: (value) {
@@ -410,7 +412,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
         // Stats Section
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          color: Colors.red[50],
+          color: Colors.grey[50],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -429,7 +431,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.red[800]!, Colors.orange[700]!],
+                colors: [AppTheme.primaryColor, AppTheme.secondaryColor],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -516,7 +518,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
   Widget _buildStatItem(IconData icon, String value, String label) {
     return Column(
       children: [
-        Icon(icon, color: Colors.red[800], size: 24),
+        Icon(icon, color: AppTheme.primaryColor, size: 24),
         SizedBox(height: 5),
         Text(
           value,
@@ -599,7 +601,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.red[100],
+                            color: AppTheme.primaryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
@@ -677,14 +679,14 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.red[50],
+                                color: AppTheme.primaryColor.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(4),
-                                border: Border.all(color: Colors.red[100]!),
+                                border: Border.all(color: AppTheme.primaryColor.withOpacity(0.2)),
                               ),
                               child: Text(
                                 item.name,
                                 style: TextStyle(
-                                  color: Colors.red[800],
+                                  color: AppTheme.primaryColor,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -712,7 +714,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
                         Text(
                           'Free delivery',
                           style: TextStyle(
-                            color: Colors.red[800],
+                            color: AppTheme.primaryColor,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -724,7 +726,7 @@ class _ChickenCategoryScreenState extends State<ChickenCategoryScreen> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.red[800],
+                            color: AppTheme.primaryColor,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(

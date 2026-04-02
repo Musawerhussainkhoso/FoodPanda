@@ -7,6 +7,8 @@ import 'package:foodpanda_app/utils/app_theme.dart';
 class BurgerCategoryScreen extends StatefulWidget {
   static const String routeName = '/burger-category';
 
+  const BurgerCategoryScreen({super.key});
+
   @override
   _BurgerCategoryScreenState createState() => _BurgerCategoryScreenState();
 }
@@ -323,7 +325,7 @@ class _BurgerCategoryScreenState extends State<BurgerCategoryScreen> {
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppTheme.primaryColor, Color(0xFFFBB03B)],
+                colors: [AppTheme.primaryColor, AppTheme.secondaryColor],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),

@@ -4,6 +4,7 @@ import 'package:foodpanda_app/Models/restaurant_model.dart';
 import 'package:foodpanda_app/Providers/favorites_provider.dart';
 import 'package:foodpanda_app/Screens/restaurant_detail_screen.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
+import 'package:foodpanda_app/widgets/food_express_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -21,23 +22,41 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor,
-        elevation: 0,
-        title: const Text(
-          'Favorites',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
+      backgroundColor: AppTheme.backgroundColor,
+      appBar: const FoodExpressAppBar(title: 'Favorites'),
       body: Consumer<FavoritesProvider>(
-        builder: (_, favorites, __) {
+        builder: (context, favorites, child) {
           final favs = favorites.favorites;
           if (favs.isEmpty) {
-            return const Center(
-              child: Text(
-                'No favourites yet.',
-                style: TextStyle(color: Colors.grey),
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.favorite_border_rounded,
+                      size: 72,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'No favourites yet',
+                      style: AppTheme.headline1.copyWith(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Tap the heart on a restaurant to save it here.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }

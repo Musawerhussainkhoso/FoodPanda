@@ -1,40 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
-
-Widget _buildBreadcrumb(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-    child: Row(
-      children: [
-        GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Text(
-            'My Profile',
-            style: TextStyle(
-              color: AppTheme.primaryColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4),
-          child: Icon(
-            Icons.chevron_right,
-            size: 16,
-            color: Colors.grey,
-          ),
-        ),
-        const Text(
-          'Delivery addresses',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+import 'package:foodpanda_app/widgets/food_express_app_bar.dart';
 
 class DeliveryAddressesScreen extends StatelessWidget {
   const DeliveryAddressesScreen({super.key});
@@ -42,27 +8,14 @@ class DeliveryAddressesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addresses = [
-      'Home • 123 Street',
-      'Office • Downtown Plaza',
-      'Hostel • Block A, Room 12',
+      'Personal · 123 Street',
+      'Office · Downtown Plaza',
+      'Hostel · Block A, Room 12',
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Delivery addresses',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      backgroundColor: AppTheme.backgroundColor,
+      appBar: const FoodExpressAppBar(title: 'Delivery addresses'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -70,43 +23,53 @@ class DeliveryAddressesScreen extends StatelessWidget {
           );
         },
         backgroundColor: AppTheme.primaryColor,
+        foregroundColor: Colors.white,
         label: const Text('Add new'),
         icon: const Icon(Icons.add_location_alt_outlined),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildBreadcrumb(context),
-          const Divider(height: 1),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: addresses.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
-              itemBuilder: (context, index) {
-                final address = addresses[index];
-                return Card(
-                  child: ListTile(
-                    leading: Icon(
-                      index == 0 ? Icons.home : Icons.location_on_outlined,
-                      color: AppTheme.primaryColor,
-                    ),
-                    title: Text(address),
-                    subtitle: const Text('Tap to use this address'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Using: $address')),
-                      );
-                    },
-                  ),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: addresses.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        itemBuilder: (context, index) {
+          final address = addresses[index];
+          return Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            elevation: 0,
+            shadowColor: Colors.black12,
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              leading: CircleAvatar(
+                backgroundColor: AppTheme.primaryColor.withOpacity(0.12),
+                child: Icon(
+                  index == 0
+                      ? Icons.home_work_outlined
+                      : Icons.location_on_outlined,
+                  color: AppTheme.primaryColor,
+                ),
+              ),
+              title: Text(
+                address,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              subtitle: const Text('Tap to use this address'),
+              trailing: Icon(Icons.chevron_right_rounded, color: Colors.grey[400]),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Using: $address')),
                 );
               },
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 }
-

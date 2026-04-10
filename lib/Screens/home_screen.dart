@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
   final ScrollController _scrollController = ScrollController();
-  String _selectedAddress = 'Home • 123 Street';
+  String _selectedAddress = 'Personal · 123 Street';
   String _selectedCategory = 'All';
 
   @override
@@ -112,67 +112,295 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // Define _buildDrawer inside the state class
-  Widget _buildDrawer() {
-    return Drawer(
-      width: 280,
-      child: Column(
-        children: [
-          Consumer<ProfileProvider>(
-            builder: (_, profile, __) => InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/profile');
-              },
-              child: UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: AppTheme.primaryColor),
-                margin: EdgeInsets.zero,
-                accountName: Text(
-                  profile.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                accountEmail: Text(profile.email),
-                currentAccountPicture: profile.hasProfileImage
-                    ? CircleAvatar(
-                        backgroundImage: MemoryImage(base64Decode(profile.profileImageBase64!)),
-                      )
-                    : CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.person, color: AppTheme.primaryColor),
-                      ),
-              ),
+  IconData _addressLeadingIcon(String address) {
+    if (address.startsWith('Office')) return Icons.work_outline_rounded;
+    if (address.startsWith('Hostel')) return Icons.apartment_rounded;
+    return Icons.home_work_outlined;
+  }
+
+  Widget _drawerSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+          color: Colors.grey[600],
+          letterSpacing: 1.1,
+        ),
+      ),
+    );
+  }
+
+  Widget _drawerTile({
+    required IconData icon,
+    required String title,
+    String? subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        elevation: 0,
+        shadowColor: Colors.black12,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          leading: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: AppTheme.primaryColor, size: 22),
+          ),
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              letterSpacing: -0.2,
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text('Favorites'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/favorites');
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.history),
-            title: Text('Orders'),
-            onTap: () {},
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () {},
-          ),
-          ListTile(
-            leading: Icon(Icons.help),
-            title: Text('Help'),
-            onTap: () {},
-          ),
-        ],
+          subtitle: subtitle != null
+              ? Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                )
+              : null,
+          trailing: Icon(Icons.chevron_right_rounded, color: Colors.grey[400]),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          onTap: onTap,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawer() {
+    return Drawer(
+      width: 300,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(22)),
+      ),
+      backgroundColor: const Color(0xFFF4F4F5),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Consumer<ProfileProvider>(
+              builder: (context, profile, child) => Material(
+                color: AppTheme.primaryColor,
+                child: InkWell(
+                  onTap: () {
+                    final nav = Navigator.of(context);
+                    nav.pop();
+                    nav.pushNamed('/profile');
+                  },
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        right: -20,
+                        top: -20,
+                        child: Icon(
+                          Icons.restaurant_rounded,
+                          size: 120,
+                          color: Colors.white.withOpacity(0.08),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 22, 16, 22),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.white,
+                              backgroundImage: profile.hasProfileImage
+                                  ? MemoryImage(
+                                      base64Decode(profile.profileImageBase64!),
+                                    )
+                                  : null,
+                              child: !profile.hasProfileImage
+                                  ? Icon(
+                                      Icons.person_rounded,
+                                      size: 34,
+                                      color: AppTheme.primaryColor,
+                                    )
+                                  : null,
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Hello, ${profile.name.split(' ').first}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      letterSpacing: -0.3,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    profile.email,
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.88),
+                                      fontSize: 12,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: const Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'View account',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        SizedBox(width: 4),
+                                        Icon(
+                                          Icons.arrow_forward_rounded,
+                                          color: Colors.white,
+                                          size: 14,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.only(top: 10, bottom: 12),
+                children: [
+                  _drawerSectionTitle('OFFERS & REWARDS'),
+                  _drawerTile(
+                    icon: Icons.confirmation_number_outlined,
+                    title: 'Vouchers & offers',
+                    subtitle: 'Save on your next order',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(
+                        msg: 'No vouchers yet — check back soon!',
+                        backgroundColor: Colors.black87,
+                        textColor: Colors.white,
+                      );
+                    },
+                  ),
+                  _drawerTile(
+                    icon: Icons.card_giftcard_rounded,
+                    title: 'Invite friends',
+                    subtitle: 'Share the app & earn rewards',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(
+                        msg: 'Invite link would be shared from here',
+                        backgroundColor: AppTheme.primaryColor,
+                        textColor: Colors.white,
+                      );
+                    },
+                  ),
+                  _drawerSectionTitle('YOUR ORDERS'),
+                  _drawerTile(
+                    icon: Icons.favorite_outline_rounded,
+                    title: 'Favorites',
+                    subtitle: 'Restaurants you love',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/favorites');
+                    },
+                  ),
+                  _drawerTile(
+                    icon: Icons.receipt_long_rounded,
+                    title: 'Order history',
+                    subtitle: 'Track past deliveries',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/orders');
+                    },
+                  ),
+                  _drawerSectionTitle('SUPPORT'),
+                  _drawerTile(
+                    icon: Icons.help_outline_rounded,
+                    title: 'Help center',
+                    subtitle: 'FAQs & contact',
+                    onTap: () {
+                      final nav = Navigator.of(context);
+                      nav.pop();
+                      nav.pushNamed('/help');
+                    },
+                  ),
+                  _drawerTile(
+                    icon: Icons.settings_outlined,
+                    title: 'Settings',
+                    subtitle: 'Notifications, language & more',
+                    onTap: () {
+                      final nav = Navigator.of(context);
+                      nav.pop();
+                      nav.pushNamed('/settings');
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.delivery_dining_rounded,
+                          size: 18, color: Colors.grey[500]),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Food Express',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Version 1.0.0',
+                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -185,33 +413,76 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       builder: (context) {
         final addresses = [
-          'Home • 123 Street',
-          'Office • Downtown',
-          'Hostel • Block A',
+          'Personal · 123 Street',
+          'Office · Downtown',
+          'Hostel · Block A',
         ];
         return SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 8),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_rounded,
+                      color: AppTheme.primaryColor,
+                      size: 22,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Deliver to',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'Select delivery address',
+                  'Choose where we should bring your order.',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: Colors.grey[600],
+                    height: 1.35,
                   ),
                 ),
               ),
+              const SizedBox(height: 8),
               ...addresses.map(
                 (address) => ListTile(
-                  leading: Icon(
-                    address.startsWith('Home')
-                        ? Icons.home
-                        : Icons.location_on_outlined,
-                    color: AppTheme.primaryColor,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  leading: CircleAvatar(
+                    backgroundColor:
+                        AppTheme.primaryColor.withOpacity(0.12),
+                    child: Icon(
+                      _addressLeadingIcon(address),
+                      color: AppTheme.primaryColor,
+                      size: 22,
+                    ),
                   ),
-                  title: Text(address),
+                  title: Text(
+                    address,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
+                  ),
                   onTap: () {
                     setState(() {
                       _selectedAddress = address;
@@ -220,7 +491,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 12),
             ],
           ),
         );
@@ -240,45 +511,61 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverAppBar(
             pinned: true,
             floating: false,
-            expandedHeight: 115.0,
+            expandedHeight: 118.0,
             backgroundColor: AppTheme.primaryColor,
             elevation: 0,
             centerTitle: false,
-            titleSpacing: -4,
+            titleSpacing: 8,
+            leading: IconButton(
+              icon: const Icon(Icons.menu_rounded, color: Colors.white),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+              tooltip: 'Menu',
+            ),
             title: Row(
               children: [
-                InkWell(
-                  onTap: _showAddressSelector,
-                  borderRadius: BorderRadius.circular(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Delivering to',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.white70,
+                Expanded(
+                  child: InkWell(
+                    onTap: _showAddressSelector,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Delivering to',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white.withOpacity(0.75),
+                            letterSpacing: 0.2,
+                          ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            _selectedAddress,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                _selectedAddress,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: -0.2,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 18,
                               color: Colors.white,
                             ),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -524,7 +811,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    _selectedCategory == 'All' ? 'All Restaurants' : '$_selectedCategory',
+                    _selectedCategory == 'All'
+                        ? 'All Restaurants'
+                        : _selectedCategory,
                     style: AppTheme.headline1.copyWith(fontSize: 20),
                   ),
                 ),
@@ -537,8 +826,58 @@ class _HomeScreenState extends State<HomeScreen> {
           _filteredRestaurants.isEmpty
               ? SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: Center(child: Text("No restaurants found")),
+                    padding: const EdgeInsets.fromLTRB(32, 48, 32, 48),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 64,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No restaurants match',
+                          textAlign: TextAlign.center,
+                          style: AppTheme.headline1.copyWith(
+                            fontSize: 18,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Try another search or clear filters.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            _searchController.clear();
+                            _selectedCategory = 'All';
+                            _filterRestaurants();
+                          },
+                          icon: const Icon(Icons.refresh_rounded, size: 20),
+                          label: const Text('Reset search'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppTheme.primaryColor,
+                            side: BorderSide(
+                              color: AppTheme.primaryColor.withOpacity(0.5),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               : SliverPadding(
@@ -563,9 +902,13 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.grey[500],
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        elevation: 12,
+        selectedFontSize: 12,
+        unselectedFontSize: 11,
         onTap: (index) {
           if (index == 0) {
             setState(() {
@@ -588,37 +931,26 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.pushNamed(context, '/profile');
           }
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(
+              _currentIndex == 0
+                  ? Icons.explore_rounded
+                  : Icons.explore_outlined,
+            ),
+            label: 'Explore',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_outlined),
+            activeIcon: Icon(Icons.receipt_long_rounded),
             label: 'Orders',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline_rounded),
+            activeIcon: Icon(Icons.person_rounded),
             label: 'Profile',
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDesktopNavItem(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: TextButton(
-        onPressed: () {},
-        child: Text(
-          title,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
       ),
     );
   }

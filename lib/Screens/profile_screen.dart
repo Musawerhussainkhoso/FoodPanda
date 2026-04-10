@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
+import 'package:foodpanda_app/widgets/food_express_app_bar.dart';
 import 'package:foodpanda_app/Screens/delivery_addresses_screen.dart';
 import 'package:foodpanda_app/Screens/payment_methods_screen.dart';
 import 'package:foodpanda_app/Screens/Login_Screen.dart';
@@ -15,23 +16,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'My Profile',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-          ),
-        ),
-      ),
+      appBar: const FoodExpressAppBar(title: 'My profile'),
       body: Consumer<ProfileProvider>(
         builder: (context, profile, _) {
           return SingleChildScrollView(

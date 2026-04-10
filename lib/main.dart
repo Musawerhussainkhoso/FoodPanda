@@ -15,6 +15,8 @@ import 'package:foodpanda_app/Screens/favorites_screen.dart';
 import 'package:foodpanda_app/Screens/checkout_screen.dart';
 import 'package:foodpanda_app/Screens/delivery_addresses_screen.dart';
 import 'package:foodpanda_app/Screens/payment_methods_screen.dart';
+import 'package:foodpanda_app/Screens/settings_screen.dart';
+import 'package:foodpanda_app/Screens/help_center_screen.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +54,8 @@ class MyApp extends StatelessWidget {
           '/profile': (context) => const ProfileScreen(),
           '/addresses': (context) => const DeliveryAddressesScreen(),
           '/payments': (context) => const PaymentMethodsScreen(),
+          '/settings': (context) => const SettingsScreen(),
+          '/help': (context) => const HelpCenterScreen(),
         },
       ),
     );

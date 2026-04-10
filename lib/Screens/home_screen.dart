@@ -3,9 +3,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/Models/restaurant_model.dart';
 import 'package:foodpanda_app/Providers/cart_provider.dart';
+import 'package:foodpanda_app/Providers/favorites_provider.dart';
 import 'package:foodpanda_app/Providers/profile_provider.dart';
 import 'package:foodpanda_app/Screens/restaurant_detail_screen.dart';
 import 'package:foodpanda_app/utils/app_theme.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -149,7 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text('Favorites'),
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/favorites');
+            },
           ),
           ListTile(
             leading: Icon(Icons.history),
@@ -675,6 +680,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildRestaurantCard(Restaurant restaurant) {
+    void openRestaurant() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RestaurantDetailScreen(restaurant: restaurant),
+        ),
+      );
+    }
+
     return Container(
       height: 140, // Fixed height for structured horizontal structure
       decoration: BoxDecoration(
@@ -693,101 +707,104 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => RestaurantDetailScreen(restaurant: restaurant),
-              ),
-            );
-          },
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Image Section
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      bottomLeft: Radius.circular(16),
-                    ),
-                    child: Image.asset(
-                      restaurant.imagePath,
-                      width: 130,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: 130,
-                          height: double.infinity,
-                          color: Colors.grey[100],
-                          child: Center(
-                            child: Icon(
-                              Icons.restaurant,
-                              size: 40,
-                              color: Colors.grey[300],
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Image Section (tap opens restaurant)
+            SizedBox(
+              width: 130,
+              child: InkWell(
+                onTap: openRestaurant,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  bottomLeft: Radius.circular(16),
+                ),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        bottomLeft: Radius.circular(16),
+                      ),
+                      child: Image.asset(
+                        restaurant.imagePath,
+                        width: 130,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 130,
+                            height: double.infinity,
+                            color: Colors.grey[100],
+                            child: Center(
+                              child: Icon(
+                                Icons.restaurant,
+                                size: 40,
+                                color: Colors.grey[300],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  // Delivery Time Tag
-                  Positioned(
-                    bottom: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.access_time_rounded,
-                            size: 12,
-                            color: AppTheme.primaryColor,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            restaurant.deliveryTime,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black87,
+                    // Delivery Time Tag
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time_rounded,
+                              size: 12,
+                              color: AppTheme.primaryColor,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              restaurant.deliveryTime,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              // Details Section
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
+            ),
+            // Details Section
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: openRestaurant,
+                            borderRadius: BorderRadius.circular(8),
                             child: Text(
                               restaurant.name,
                               style: const TextStyle(
@@ -800,98 +817,119 @@ class _HomeScreenState extends State<HomeScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          const Icon(
-                            Icons.favorite_border,
-                            size: 20,
-                            color: Colors.grey,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${restaurant.category} • ${restaurant.priceRange}',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 13,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        const SizedBox(width: 4),
+                        Consumer<FavoritesProvider>(
+                          builder: (_, favorites, __) {
+                            final isFavorite = favorites.isFavorite(restaurant.id);
+                            return IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              icon: Icon(
+                                isFavorite ? Icons.favorite : Icons.favorite_border,
+                                size: 20,
+                                color: isFavorite ? AppTheme.primaryColor : Colors.grey,
+                              ),
+                              onPressed: () {
+                                favorites.toggleFavorite(restaurant);
+                                Fluttertoast.showToast(
+                                  msg: isFavorite
+                                      ? "Removed from favourites!"
+                                      : "Added to favourites!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: isFavorite ? Colors.black : Color(0xffE5007D),
+                                  textColor: Colors.white,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${restaurant.category} • ${restaurant.priceRange}',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13,
                       ),
-                      const Spacer(),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star_rounded,
-                            color: Colors.amber[500],
-                            size: 18,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          color: Colors.amber[500],
+                          size: 18,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          restaurant.rating.toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            restaurant.rating.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
+                        ),
+                        Text(
+                          ' (500+)',
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 12,
                           ),
-                          Text(
-                            ' (500+)',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'Free Delivery',
                             style: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 12,
+                              color: AppTheme.primaryColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              'Free Delivery',
-                              style: TextStyle(
-                                color: AppTheme.primaryColor,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                              ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.pink[50],
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            '20% OFF',
+                            style: TextStyle(
+                              color: AppTheme.primaryColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.pink[50],
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              '20% OFF',
-                              style: TextStyle(
-                                color: AppTheme.primaryColor,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

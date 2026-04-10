@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodpanda_app/Providers/cart_provider.dart';
+import 'package:foodpanda_app/Providers/favorites_provider.dart';
 import 'package:foodpanda_app/Providers/profile_provider.dart';
 import 'package:foodpanda_app/Screens/ChickenCategoryScreen.dart';
 import 'package:foodpanda_app/Screens/Login_Screen.dart';
@@ -10,6 +11,7 @@ import 'package:foodpanda_app/Screens/fastfoodcategory.dart';
 import 'package:foodpanda_app/Screens/home_screen.dart';
 import 'package:foodpanda_app/Screens/orders_screen.dart';
 import 'package:foodpanda_app/Screens/profile_screen.dart';
+import 'package:foodpanda_app/Screens/favorites_screen.dart';
 import 'package:foodpanda_app/Screens/checkout_screen.dart';
 import 'package:foodpanda_app/Screens/delivery_addresses_screen.dart';
 import 'package:foodpanda_app/Screens/payment_methods_screen.dart';
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => FavoritesProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: MaterialApp(
@@ -38,6 +41,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (context) => LoginScreen(),
           '/home': (context) => HomeScreen(),
+          '/favorites': (context) => const FavoritesScreen(),
           '/cart': (context) => CartScreen(),
           '/checkout': (context) => const CheckoutScreen(),
           '/burger-category': (context) => BurgerCategoryScreen(),

@@ -118,6 +118,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Icons.home_work_outlined;
   }
 
+  /// Close the drawer, push [routeName], then when that screen is popped reopen
+  /// the drawer so back goes to “drawer open” before the user closes it for home.
+  void _pushFromDrawer(String routeName) {
+    Navigator.pop(context);
+    Navigator.pushNamed(context, routeName).then((_) {
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _scaffoldKey.currentState?.openDrawer();
+      });
+    });
+  }
+
   Widget _drawerSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
@@ -194,11 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, profile, child) => Material(
                 color: AppTheme.primaryColor,
                 child: InkWell(
-                  onTap: () {
-                    final nav = Navigator.of(context);
-                    nav.pop();
-                    nav.pushNamed('/profile');
-                  },
+                  onTap: () => _pushFromDrawer('/profile'),
                   child: Stack(
                     children: [
                       Positioned(
@@ -333,40 +342,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icons.favorite_outline_rounded,
                     title: 'Favorites',
                     subtitle: 'Restaurants you love',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/favorites');
-                    },
+                    onTap: () => _pushFromDrawer('/favorites'),
                   ),
                   _drawerTile(
                     icon: Icons.receipt_long_rounded,
                     title: 'Order history',
                     subtitle: 'Track past deliveries',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/orders');
-                    },
+                    onTap: () => _pushFromDrawer('/orders'),
                   ),
                   _drawerSectionTitle('SUPPORT'),
                   _drawerTile(
                     icon: Icons.help_outline_rounded,
                     title: 'Help center',
                     subtitle: 'FAQs & contact',
-                    onTap: () {
-                      final nav = Navigator.of(context);
-                      nav.pop();
-                      nav.pushNamed('/help');
-                    },
+                    onTap: () => _pushFromDrawer('/help'),
                   ),
                   _drawerTile(
                     icon: Icons.settings_outlined,
                     title: 'Settings',
                     subtitle: 'Notifications, language & more',
-                    onTap: () {
-                      final nav = Navigator.of(context);
-                      nav.pop();
-                      nav.pushNamed('/settings');
-                    },
+                    onTap: () => _pushFromDrawer('/settings'),
                   ),
                 ],
               ),
